@@ -2,34 +2,22 @@
 
 ## Table of Contents:
 1. [Introduction and Motivation](#data)
-2. [The goal of creating this project](#clean_data)
-3. [Data Loading and Inspection](#cau3)
-4. [Read and explain dataset](#cau4)
-5. [Data Cleaning ](#cau5)
-6. [Exploratory Data Analysis (EDA)](#cau6)
-7. [Conclusion](#cau7)
+2. [Data Loading and Inspection](#cau2)
+3. [Data Cleaning ](#cau3)
+4. [Exploratory Data Analysis (EDA)](#cau4)
+5. [Conclusion](#cau5)
 
 <div id='data'/>
   
 ## 1. Introduction and Motivation
-How much time do you go online? For entertainment, shopping work, or just for searching? The inspiration for this project came from my curiosity on these aspects of the internet websites. As someone with a background in Finance and Analytics, I realized that understanding customer  is essential for business development, especially in the growing e-commerce era. This motivated me to create a solution that would dive deeper into the e-commerce industry by understanding customers behavior via revelant metrics.
+As a big fan of Amazon: I do shopping on Amazon with Amazon Prime ; Watching my favourite series with Prime Video, I am excited to undertake the Amazon Sales Analysis project because it offers a unique opportunity to apply my data analysis skills to a real-world dataset. By delving into this extensive dataset, I aim to uncover valuable insights into consumer behavior, sales trends, and product performance. This project will not only enhance my technical abilities in data cleaning, manipulation, and visualization but also develop my critical thinking skills as I interpret the findings and draw meaningful conclusions. Ultimately, this experience will contribute to my professional growth and solidify my understanding of data-driven decision-making.
 
-The eCommerce dataset is stored in a public Google BigQuery dataset. This dataset contains information about user sessions on a website collected from Google Analytics in 2017. Based on the eCommerce dataset, I perform queries to analyze website activity in 2017, such as calculating bounce rate, identifying days with the highest revenue, analyzing user behavior on pages, and various other types of analysis. This project aims to have an outlook on the business situation, marketing activity efficiency analyzing the products.
+The dataset is stored in the file Amazon Sale Report.csv. The project employs various Python libraries, including NumPy, Pandas, Matplotlib, and Seaborn, to analyze and visualize the dataset. To analyze and work with this dataset, I uses the Jupyter Notebook  to write and execute Python code.
 
-To query and work with this dataset, I uses the Google BigQuery tool to write and execute SQL queries.
-
-<div id='clean_data'/>
+<div id='cau2'/>
   
-## 2. The goal of creating this project
-- Overview of website activity
-- Bounce rate analysis
-- Revenue analysis
-- Transactions analysis
-- Products analysis
-
-<div id='cau3'/>
   
-## 3. Data Loading and Inspection
+## 2. Data Loading and Inspection
   
 The eCommerce dataset is stored in a public Google BigQuery dataset. To access the dataset, follow these steps:
 - Log in to your Google Cloud Platform account and create a new project.
@@ -40,34 +28,8 @@ The eCommerce dataset is stored in a public Google BigQuery dataset. To access t
   
 <div id='cau4'/>
   
-## 4. Read and explain dataset
-
-Here is the column structure of the database
-
-https://support.google.com/analytics/answer/3437719?hl=en
-  | Field Name                       | Data Type | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-|----------------------------------|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| fullVisitorId                    | STRING    | The unique visitor ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| date                             | STRING    | The date of the session in YYYYMMDD format.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| totals                           | RECORD    | This section contains aggregate values across the session.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| totals.bounces                   | INTEGER   | Total bounces (for convenience). For a bounced session, the value is 1, otherwise it is null.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| totals.hits                      | INTEGER   | Total number of hits within the session.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| totals.pageviews                 | INTEGER   | Total number of pageviews within the session.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| totals.visits                    | INTEGER   | The number of sessions (for convenience). This value is 1 for sessions with interaction events. The value is null if there are no interaction events in the session.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| trafficSource.source             | STRING    | The source of the traffic source. Could be the name of the search engine, the referring hostname, or a value of the utm_source URL parameter.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| hits                             | RECORD    | This row and nested fields are populated for any and all types of hits.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| hits.eCommerceAction             | RECORD    | This section contains all of the ecommerce hits that occurred during the session. This is a repeated field and has an entry for each hit that was collected.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| hits.eCommerceAction.action_type | STRING    | The action type. Click through of product lists = 1, Product detail views = 2, Add product(s) to cart = 3, Remove product(s) from cart = 4, Check out = 5, Completed purchase = 6, Refund of purchase = 7, Checkout options = 8, Unknown = 0.Usually this action type applies to all the products in a hit, with the following exception: when hits.product.isImpression = TRUE, the corresponding product is a product impression that is seen while the product action is taking place (i.e., a product in list view).Example query to calculate number of products in list views:SELECTCOUNT(hits.product.v2ProductName)FROM [foo-160803:123456789.ga_sessions_20170101]WHERE hits.product.isImpression == TRUEExample query to calculate number of products in detailed view:SELECTCOUNT(hits.product.v2ProductName),FROM[foo-160803:123456789.ga_sessions_20170101]WHEREhits.ecommerceaction.action_type = 2AND ( BOOLEAN(hits.product.isImpression) IS NULL OR BOOLEAN(hits.product.isImpression) == FALSE ) |
-| hits.product                     | RECORD    | This row and nested fields will be populated for each hit that contains Enhanced Ecommerce PRODUCT data.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| hits.product.productQuantity     | INTEGER   | The quantity of the product purchased.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| hits.product.productRevenue      | INTEGER   | The revenue of the product, expressed as the value passed to Analytics multiplied by 10^6 (e.g., 2.40 would be given as 2400000).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| hits.product.productSKU          | STRING    | Product SKU.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| hits.product.v2ProductName       | STRING    | Product Name.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| fullVisitorId                    | STRING    | The unique visitor ID.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-
-<div id='cau5'/>
   
-## 5. Data Processing & Exploratory Data Analysis
+## 3. Data Processing & Exploratory Data Analysis
 
 
 ~~~~sql
@@ -137,8 +99,8 @@ UNNEST(hits.product) as product
 
 <div id='cau6'/>
   
-## 6. Business=questions and Solution
-**6.1 calculate total visits, pageview, transaction, and revenue for Jan, Feb, and March 2017**
+## 4. Business=questions and Solution
+**4.1 calculate total visits, pageview, transaction, and revenue for Jan, Feb, and March 2017**
 
 ~~~~sql
    SELECT 
@@ -171,7 +133,7 @@ Moreover, the substantial jump in transactions and revenue from January to March
   
  **Future Strategy and Focus**: Consider further investigating what strategies, campaigns, or changes were implemented between January and March that contributed to the significant increase in transactions and revenue. These insights can inform future marketing and optimization efforts.
 
-**6.2 Bounce rate per traffic source in July 2017**
+**4.2 Bounce rate per traffic source in July 2017**
 ~~~~sql
 SELECT trafficSource.source
        ,COUNT(visitNumber) total_visits
@@ -289,7 +251,7 @@ The table provides an overview of website traffic from various sources and key m
 - Thereafter, the Youtube.com website had 6,351 visits, with 4,238 bounces, resulting in a bounce rate of approximately 66.73%, higher than Google and Direct.
 - Search.mysearch.com website had the lowest total visits but the highest bounce rate. It had 12 visits with 11 bounces, resulting in a bounce rate of approximately 91.67%. This indicates that most users who visited the website from this source left without interacting with other pages. A high bounce rate from a source like search.mysearch.com suggests that users arriving from this source might not find the content they are looking for or that the landing page experience may not be engaging enough to encourage further exploration. It's important to note that while addressing high bounce rates is essential, the context of the source and user behavior should be thoroughly analyzed to determine the most effective strategies for improvement. Because a lower bounce rate generally indicates that users are more engaged with the website content, while a higher bounce rate may suggest that users are leaving the site after viewing only a single page.
 
-**6.3 Revenue by traffic source by week, by month in June 2017**
+**4.3 Revenue by traffic source by week, by month in June 2017**
 ~~~~sql
 WITH GET_RE_MONTH AS 
 (
@@ -853,19 +815,7 @@ ORDER BY QUANTITY DESC;
 | Google Twill Cap                                         | 1        |
 | Google Mens Long & Lean Tee Grey                         | 1        |
 | Google Mens Long & Lean Tee Charcoal                     | 1        |
-| Google Laptop and Cell Phone Stickers                    | 1        |
-| Google Mens Bike Short Sleeve Tee Charcoal               | 1        |
-| Google 5-Panel Cap                                       | 1        |
-| Google Toddler Short Sleeve T-shirt Grey                 | 1        |
-| Android Sticker Sheet Ultra Removable                    | 1        |
-| YouTube Custom Decals                                    | 1        |
-| Four Color Retractable Pen                               | 1        |
-| Google Mens Long Sleeve Raglan Ocean Blue                | 1        |
-| Google Mens Vintage Badge Tee White                      | 1        |
-| Google Mens 100% Cotton Short Sleeve Hero Tee Red        | 1        |
-| Android Mens Vintage Tank                                | 1        |
-| Google Mens Performance Full Zip Jacket Black            | 1        |
-| 26 oz Double Wall Insulated Bottle                       | 1        |
+| G                 | 1        |
 | Google Mens  Zip Hoodie                                  | 1        |
 | YouTube Womens Short Sleeve Hero Tee Charcoal            | 1        |
 | Google Mens Pullover Hoodie Grey                         | 1        |
@@ -875,15 +825,7 @@ ORDER BY QUANTITY DESC;
 | YouTube Mens Short Sleeve Hero Tee Black                 | 1        |
 | Google Slim Utility Travel Bag                           | 1        |
 | Android BTTF Moonshot Graphic Tee                        | 1        |
-| Google Mens Airflow 1/4 Zip Pullover Black               | 1        |
-| Google Womens Long Sleeve Tee Lavender                   | 1        |
-| 8 pc Android Sticker Sheet                               | 1        |
-| YouTube Hard Cover Journal                               | 1        |
-| Android Mens Short Sleeve Hero Tee Heather               | 1        |
-| YouTube Womens Short Sleeve Tri-blend Badge Tee Charcoal | 1        |
-| Google Mens Performance 1/4 Zip Pullover Heather/Black   | 1        |
-| YouTube Mens Long & Lean Tee Charcoal                    | 1        |
-                                                                      
+| Goo
 
 Overall, the data provides valuable insights into customer preferences, product popularity, and potential areas for marketing and merchandising strategies. Further analysis of historical data and integration with customer demographics could provide a more comprehensive understanding of these trends.
  
@@ -902,68 +844,12 @@ WITH addtocart AS
 )
     , productview AS
 (
-        SELECT
-        FORMAT_DATE("%Y%m",PARSE_DATE("%Y%m%d",date)) AS month
-        ,COUNT(eCommerceAction.action_type) AS num_product_view
-        FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*`   
-                ,UNNEST (hits) AS hits
-        WHERE _table_suffix BETWEEN '0101' AND '0331'
-                AND eCommerceAction.action_type = '2'
-        GROUP BY month 
-)
-    , id_purchase_revenue AS -- this is the first step to inspect the purchase step
-(
-                SELECT
-        FORMAT_DATE("%Y%m",PARSE_DATE("%Y%m%d",date)) AS month
-        ,fullVisitorId
-        ,eCommerceAction.action_type
-        ,product.productRevenue -- notice that not every purchase step that an ID made that the revenue was recorded (maybe refund?).
-        FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*`   
-                ,UNNEST (hits) AS hits
-                ,UNNEST (hits.product) AS product -- productrevenue 
-        WHERE _table_suffix BETWEEN '0101' AND '0331'
-                AND eCommerceAction.action_type = '6'
-)
-    , purchase AS
-(
-        SELECT 
-            month
-            ,COUNT(action_type) AS num_purchase
-        FROM id_purchase_revenue 
-        WHERE productRevenue IS NOT NULL
-        GROUP BY month
-)
-SELECT 
-        month
-        ,num_product_view
-        ,num_addtocart
-        ,num_purchase
-        ,ROUND(num_addtocart / num_product_view * 100.0, 2) AS add_to_cart_rate
-        ,ROUND(num_purchase / num_product_view * 100.0, 2) AS purchase_rate
-FROM productview
-JOIN addtocart
-USING (month)
-JOIN purchase
-USING (month)
-ORDER BY month;
-~~~~
-| month  | num_product_view | num_addtocart | num_purchase | add_to_cart_rate | purchase_rate |
-|--------|------------------|---------------|--------------|------------------|---------------|
-| 201701 | 25787            | 7342          | 4328         | 28.47            | 16.78         |
-| 201702 | 21489            | 7360          | 4141         | 34.25            | 19.27         |
-| 201703 | 23549            | 8782          | 6018         | 37.29            | 25.56         |
 
-
-The table illustrates five various metrics and rates related to user behavior from January to March 2017.
-
-Overall, the number of product views from January 2017 to March 2017 increased gradually. The add-to-cart rate and purchase rate also increased over the same period, indicating improved user engagement and conversion.
-
-However, the add-to-cart rate and purchase rate are notably higher in March 2017, suggesting potential improvements in the website's user experience or marketing efforts.
-
+JOIN
 
 <div id='cau7'/>
   
-## 7. Conclusion
+## 5. Conclusion
 
 - This is the  opportunity to learn about the marketing industry and the customer journey through this e-commerce dataset
 
